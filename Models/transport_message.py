@@ -1,16 +1,10 @@
-from typing import Optional, Literal
-from pydantic_xml import BaseXmlModel, attr
+from typing import Optional
+from pydantic import Field
+from pydantic_xml import BaseXmlModel, attr, element
 
 
 class TransportMessage(BaseXmlModel):
-    TransportMessageType: Literal[int] = attr()
-    TaskDescription: Literal[int] = attr()
-    MessageHeader: Literal[int] = attr()
-    IsLastChunk: Literal[bool] = attr()
-
-    def __init__(self, tmt, td, message_header, is_last_chunk):
-        super().__init__()
-        self.TransportMessageType = tmt
-        self.TaskDescription = td
-        self.MessageHeader = message_header
-        self.IsLastChunk = is_last_chunk
+    TransportMessageType: Optional[int] = element(xml_attribute=True, default_factory=int, name="TransportMessageType")
+    TaskDescription: Optional[int] = element(xml_attribute=True, default=None, name='TaskDescription')
+    MessageHeader: Optional[str] = element(xml_attribute=True, default='', name='MessageHeader')
+    IsLastChunk: Optional[bool] = element(xml_attribute=True, default_factory=bool, name='IsLastChunk')

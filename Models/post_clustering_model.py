@@ -1,13 +1,12 @@
-import string
-from PyQt5.uic.Compiler.misc import Literal
+from typing import Optional
 from pydantic_xml import attr, BaseXmlModel
 
 
 class PostClusteringModel(BaseXmlModel):
-    title: Literal[string] = attr()
-    content: Literal[string] = attr()
-    publisher_name: Literal[string] = attr()
-    link_url: Literal[string] = attr()
-    link_name: Literal[string] = attr()
-    geo_tag: Literal[string] = attr()
+    title: Optional[str] = attr()
+    content: Optional[str] = attr()
+    publisher_name: Optional[str] = attr()
+    link_url: Optional[str] = attr()
+    link_name: Optional[str] = attr()
+    geo_tag: Optional[str] = attr()
 
