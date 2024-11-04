@@ -37,6 +37,13 @@ class DataExtractor:
         message_body = transport_message_data['MessageBody']
         users_list = message_body['FullUserDataForClustering']
         for user in users_list:
+            gender_value = user['gender']
+            birthday_value = user['birthday']
+
+            if gender_value is None or gender_value['@xsi:nil'] == 'true':
+                user['gender'] = None
+            if birthday_value is None or birthday_value['@xsi:nil'] == 'true':
+                user['birthday'] = None
             if 'userPosts' not in user or user['userPosts'] is None:
                 user['userPosts'] = []
             if 'userComments' not in user or user['userComments'] is None:
@@ -66,7 +73,6 @@ class DataExtractor:
             #msg_body: TransportMessageWithBody[List[FullUserDataForClustering]] = body.decode('utf-8')
             msg_body = body.decode('utf-8')
             result_object =  self.ParseXML(msg_body)
-            #result = TransportMessageWithBody[List[FullUserDataForClustering]].parse_raw(msg_body)
 
             return
 
