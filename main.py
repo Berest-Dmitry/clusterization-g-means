@@ -9,6 +9,8 @@ SCRIPT_DIR =  os.path.dirname(os.getcwd()) + "\\Services"
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 from Services.data_extractor_service import DataExtractor
 
+users_list: list
+
 app = QGuiApplication(sys.argv)
 
 engine = QQmlApplicationEngine()

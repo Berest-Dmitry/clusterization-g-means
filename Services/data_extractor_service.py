@@ -40,9 +40,9 @@ class DataExtractor:
             gender_value = user['gender']
             birthday_value = user['birthday']
 
-            if gender_value is None or gender_value['@xsi:nil'] == 'true':
+            if gender_value is None or (isinstance(gender_value, dict) and gender_value['@xsi:nil'] == 'true'):
                 user['gender'] = None
-            if birthday_value is None or birthday_value['@xsi:nil'] == 'true':
+            if birthday_value is None or (isinstance(birthday_value, dict) and birthday_value['@xsi:nil'] == 'true'):
                 user['birthday'] = None
             if 'userPosts' not in user or user['userPosts'] is None:
                 user['userPosts'] = []
@@ -70,10 +70,9 @@ class DataExtractor:
         def callback(ch, method, properties, body):
             if body is None:
                 print("Failed to retrieve user data!")
-            #msg_body: TransportMessageWithBody[List[FullUserDataForClustering]] = body.decode('utf-8')
             msg_body = body.decode('utf-8')
             result_object =  self.ParseXML(msg_body)
-
+            globals()["users_list"] = result_object.MessageBody
             return
 
         self.rmq_listener_channel.basic_consume(queue="CTQ", on_message_callback=callback, auto_ack=True)
