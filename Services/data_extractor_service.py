@@ -1,7 +1,7 @@
 import string
 from typing import List
 import pika
-import pydantic_xml
+import xmltodict
 from Models.full_user_data_for_clustering import FullUserDataForClustering
 from Models.transport_message import TransportMessage
 from Models.transport_message_with_body import TransportMessageWithBody
@@ -20,6 +20,29 @@ class DataExtractor:
         self.rmq_listener_channel = self.rmq_listener_connection.channel()
         self.rmq_listener_channel.queue_declare("CTQ", durable=True, exclusive=False, auto_delete=False)
 
+    def ParseXML(self, xml_string: str):
+        data_dict = xmltodict.parse(xml_string)
+        transport_message_data = data_dict['TransportMessage']
+
+        # обработка поля описания исполняемой задачи
+        if 'TaskDescription' in transport_message_data:
+            task_description_value = transport_message_data['TaskDescription']
+            if (task_description_value is None or
+                     task_description_value['@xsi:nil'] == 'true'):
+                transport_message_data['TaskDescription'] = None
+            else:
+                transport_message_data['TaskDescription'] = int(task_description_value)
+
+        # обработка списка пользователей
+        message_body = transport_message_data['MessageBody']
+        users_list = message_body['FullUserDataForClustering']
+        for user in users_list:
+            if 'userPosts' not in user or user['userPosts'] is None:
+                user['userPosts'] = []
+            if 'userComments' not in user or user['userComments'] is None:
+                user['userComments'] = []
+
+        return TransportMessageWithBody(**transport_message_data)
 
     def BasicPuplish(self):
         request_connection = pika.BlockingConnection(pika.ConnectionParameters("localhost"))
@@ -40,10 +63,11 @@ class DataExtractor:
         def callback(ch, method, properties, body):
             if body is None:
                 print("Failed to retrieve user data!")
-            msg_body: TransportMessageWithBody[List[FullUserDataForClustering]] = body.decode('utf-8')
-            result_list = msg_body.message_body
-            if result_list is None or result_list.count() == 0:
-                print("No data is present to process")
+            #msg_body: TransportMessageWithBody[List[FullUserDataForClustering]] = body.decode('utf-8')
+            msg_body = body.decode('utf-8')
+            result_object =  self.ParseXML(msg_body)
+            #result = TransportMessageWithBody[List[FullUserDataForClustering]].parse_raw(msg_body)
+
             return
 
         self.rmq_listener_channel.basic_consume(queue="CTQ", on_message_callback=callback, auto_ack=True)

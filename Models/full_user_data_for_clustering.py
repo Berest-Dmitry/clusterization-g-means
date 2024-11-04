@@ -11,5 +11,5 @@ class FullUserDataForClustering(BaseXmlModel):
     gender: Optional[str] = attr()
     education_info:  Optional[str] = attr()
     registration_date: Optional[str] = attr()
-    userPosts: List[PostClusteringModel] = element(tag="user_posts", default=[])
-    userComments: List[CommentClusteringModel] = element(tag="user_comments", default=[])
+    userPosts: Optional[List[PostClusteringModel]] = element(tag="user_posts", default=[])
+    userComments: Optional[List[CommentClusteringModel]] = element(tag="user_comments", default=[])
