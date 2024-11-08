@@ -1,4 +1,4 @@
-from Models.transport_message import TransportMessage
+from BusinessLogic.TransportModels.transport_message import TransportMessage
 from typing import TypeVar, Generic
 
 T = TypeVar("T")

@@ -2,12 +2,10 @@ import os
 import sys
 from PyQt5.QtGui import QGuiApplication
 from PyQt5.QtQml import QQmlApplicationEngine
-import pydantic
-import pydantic_xml
 
 SCRIPT_DIR =  os.path.dirname(os.getcwd()) + "\\Services"
 sys.path.append(os.path.dirname(SCRIPT_DIR))
-from Services.data_extractor_service import DataExtractor
+from BusinessLogic.Services.data_extractor_service import DataExtractor
 
 users_list: list
 

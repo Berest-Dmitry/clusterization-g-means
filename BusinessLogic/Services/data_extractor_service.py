@@ -2,9 +2,9 @@ import string
 from typing import List
 import pika
 import xmltodict
-from Models.full_user_data_for_clustering import FullUserDataForClustering
-from Models.transport_message import TransportMessage
-from Models.transport_message_with_body import TransportMessageWithBody
+from BusinessLogic.TransportModels.full_user_data_for_clustering import FullUserDataForClustering
+from BusinessLogic.TransportModels.transport_message import TransportMessage
+from BusinessLogic.TransportModels.transport_message_with_body import TransportMessageWithBody
 
 
 class DataExtractor:

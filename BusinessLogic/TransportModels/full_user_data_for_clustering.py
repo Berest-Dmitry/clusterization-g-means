@@ -1,7 +1,7 @@
 from typing import List, Optional
 from pydantic_xml import BaseXmlModel, element, attr
-from Models.comment_clustering_model import CommentClusteringModel
-from Models.post_clustering_model import PostClusteringModel
+from BusinessLogic.TransportModels.comment_clustering_model import CommentClusteringModel
+from BusinessLogic.TransportModels.post_clustering_model import PostClusteringModel
 
 
 class FullUserDataForClustering(BaseXmlModel):
