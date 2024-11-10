@@ -1,0 +1,3 @@
+{
+  "db_connection": "postgresql://postgres:postgres@localhost/clusterization_db"
+}

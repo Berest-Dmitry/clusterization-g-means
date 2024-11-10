@@ -1,16 +1,17 @@
 from sqlalchemy import Column, String
+from sqlalchemy.orm import Mapped, mapped_column
 from Domain.Entities.Base.EntityBase import EntityBase
 
 
 # пост пользователя
 class Post(EntityBase):
     __tablename__ = 'posts'
-    title: str = Column(String, nullable=False)
-    content: str = Column(String, nullable=False)
-    publisher_name: str = Column(String)
-    link_url: str = Column(String)
-    link_name: str = Column(String)
-    geo_tag: str = Column(String)
+    title: Mapped[str] = mapped_column(String, nullable=False)
+    content: Mapped[str] = mapped_column(String, nullable=False)
+    publisher_name: Mapped[str] = mapped_column(String)
+    link_url: Mapped[str] = mapped_column(String)
+    link_name: Mapped[str] = mapped_column(String)
+    geo_tag: Mapped[str] = mapped_column(String)
 
     def __init__(self, title: str, content: str, publisher_name: str,
                  link_url: str, link_name: str, geo_tag: str):
