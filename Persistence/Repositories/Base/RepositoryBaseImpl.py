@@ -6,8 +6,6 @@ from Persistence.DatabaseConfig import DatabaseContext
 from Persistence.DatabaseConfig.DatabaseContext import AppContext
 
 
-#_context = AppContext()
-
 # имплементация базового репозитория проекта
 class RepositoryBaseImpl(RepositoryBase):
     _context: DatabaseContext
