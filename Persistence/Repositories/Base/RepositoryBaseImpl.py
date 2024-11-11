@@ -2,14 +2,21 @@ import copy
 import uuid
 from sqlalchemy.future import select
 from Domain.IRepositroies.Base.RepositoryBase import RepositoryBase, T
+from Persistence.DatabaseConfig import DatabaseContext
 from Persistence.DatabaseConfig.DatabaseContext import AppContext
 
 
+#_context = AppContext()
+
 # имплементация базового репозитория проекта
 class RepositoryBaseImpl(RepositoryBase):
+    _context: DatabaseContext
+    def __init__(self):
+        self._context = AppContext()
+
     async def add_async(self, entity: T) -> T:
         new_entity: T
-        async with AppContext.get_async_session() as session:
+        async with self._context.get_async_session().begin() as session:
             session.add(entity)
             await session.commit()
             statement = select(T).where(T.id == entity.id)
@@ -19,7 +26,7 @@ class RepositoryBaseImpl(RepositoryBase):
 
     async def update_async(self, entity: T) -> T:
         merged_entity: T
-        async with AppContext.get_async_session() as session:
+        async with self._context.get_async_session().begin() as session:
             q_entity = (select(T)
                .where(T.id == entity.id)
             )
@@ -34,7 +41,7 @@ class RepositoryBaseImpl(RepositoryBase):
 
     async def delete_async(self, entity: T) -> T:
         deleted_entity: T
-        async with AppContext.get_async_session() as session:
+        async with self._context.get_async_session().begin() as session:
             q_entity = (select(T)
                         .where(T.id == entity.id)
                         )
@@ -48,7 +55,7 @@ class RepositoryBaseImpl(RepositoryBase):
 
     async def get_by_id_async(self, _id: uuid) -> T:
         result: T
-        async with AppContext.get_async_session() as session:
+        async with self._context.get_async_session() as session:
             q_entity = (select(T)
                         .where(T.id == _id)
                         )
@@ -58,7 +65,7 @@ class RepositoryBaseImpl(RepositoryBase):
 
     async def get_all_async(self) -> list[T]:
         entities: list[T]
-        async with AppContext.get_async_session() as session:
+        async with self._context.get_async_session() as session:
             q = select(T)
             result = await session.execute(q)
             entities = result.scalars().all()

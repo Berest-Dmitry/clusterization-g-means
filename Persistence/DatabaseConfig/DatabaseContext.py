@@ -1,8 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine, async_sessionmaker, AsyncSession
 from BusinessLogic.Services.Common.ConfigLoader import get_config_section
-from sqlalchemy.ext.declarative import declarative_base
+from Domain.Entities.Base.EntityBase import Base
 
-Base = declarative_base()
 
 
 # контекст БД
@@ -11,10 +10,11 @@ class AppContext:
     _connection_str: str
 
     # метод инициализации движка работы с БД
-    def init_engine(self) -> None:
+    async def init_engine(self) -> None:
         self._connection_str = get_config_section("db_connection")
         self._db_engine = create_async_engine(self._connection_str)
-        Base.metadata.create_all(self._db_engine)
+        async with self._db_engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
 
     # метод получения подключения к БД
     def get_async_session(self):
