@@ -30,3 +30,7 @@ class RepositoryBase(ABC, Generic[T]):
     @abstractmethod
     async def get_by_id_async(self, _id: uuid) -> T:
         """ Метод получения записи по ее ID"""
+
+    @abstractmethod
+    async def bulk_insert_async(self, entities: list[T]):
+        """ Метод множественной вставки записей в таблицу"""

@@ -53,3 +53,9 @@ class PostsRepository(RepositoryMixin):
         except SQLAlchemyError as e:
             raise
 
+    # метод сохранения списка пользователей
+    async def bulk_insert_posts(self, posts: list[Post]) -> None:
+        try:
+            return await self.repository.bulk_insert_async(posts)
+        except SQLAlchemyError as e:
+            raise

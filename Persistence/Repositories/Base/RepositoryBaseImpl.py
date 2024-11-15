@@ -1,13 +1,18 @@
 import copy
 import uuid
+from typing import TypeVar
 from sqlalchemy.future import select
+from typing_extensions import Generic
+
+from Domain.Entities.Base.EntityBase import EntityBase
 from Domain.IRepositroies.Base.RepositoryBase import RepositoryBase, T
 from Persistence.DatabaseConfig import DatabaseContext
 from Persistence.DatabaseConfig.DatabaseContext import AppContext
 
+T = TypeVar("T", bound=EntityBase)
 
 # имплементация базового репозитория проекта
-class RepositoryBaseImpl(RepositoryBase):
+class RepositoryBaseImpl(RepositoryBase, Generic[T]):
     context: DatabaseContext.AppContext
     def __init__(self):
         self.context = AppContext()
@@ -69,4 +74,10 @@ class RepositoryBaseImpl(RepositoryBase):
             entities = result.scalars().all()
             await  session.close()
         return  entities
+
+    # массовая вставка записей в таблицу
+    async def bulk_insert_async(self, entities: list[T]) -> None:
+        async with self.context.get_async_session().begin() as session:
+            await session.bulk_save_objects(entities)
+            await  session.close()
 

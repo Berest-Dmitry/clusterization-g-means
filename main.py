@@ -6,9 +6,10 @@ from Persistence.DatabaseConfig.DatabaseContext import AppContext
 
 SCRIPT_DIR =  os.path.dirname(os.getcwd()) + "\\Services"
 sys.path.append(os.path.dirname(SCRIPT_DIR))
+from BusinessLogic.Services.DataDownloader import DataDownloader
 from BusinessLogic.Services.data_extractor_service import DataExtractor
 
-users_list: list
+#users_list: list
 
 #инициализация контекста БД
 db_context = AppContext()
@@ -20,10 +21,9 @@ engine = QQmlApplicationEngine()
 engine.quit.connect(app.quit)
 engine.load('./UI/main.qml')
 
-data_extractor = DataExtractor()
+data_downloader_service = DataDownloader()
 try:
-    data_extractor.BasicPuplish()
-    data_extractor.BasicConsume()
+    data_downloader_service.extract_data()
 except Exception as ex:
     print(ex)
 

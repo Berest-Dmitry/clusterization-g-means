@@ -1,5 +1,4 @@
 import uuid
-
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 from Domain.Entities.Comment import Comment
@@ -49,5 +48,12 @@ class CommentsRepository(RepositoryMixin):
                 comments_query = select(Comment).where(Comment.user_id == user_id)
                 result = await session.execute(comments_query)
             return  result
+        except SQLAlchemyError as e:
+            raise
+
+    # метод сохранения списка пользователей
+    async def bulk_insert_comments(self, comments: list[Comment]) -> None:
+        try:
+            return await self.repository.bulk_insert_async(comments)
         except SQLAlchemyError as e:
             raise
