@@ -34,11 +34,13 @@ class ModelMapper:
     # маппинг модели комментария в сущность
     @staticmethod
     def _comment_dto_to_comment(comment_data: dict):
+        parent_id = comment_data.get("parentId")
+        parent_id = None if isinstance(parent_id, dict) and parent_id['@xsi:nil'] == 'true' else parent_id
         return Comment(
             content=comment_data.get("content"),
             user_id=comment_data.get("userId"),
             post_id=comment_data.get("postId"),
-            parent_id=comment_data.get("parentId")
+            parent_id=parent_id
         )
 
     # маппинг модели поста в сущность
