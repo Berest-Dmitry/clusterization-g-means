@@ -22,13 +22,14 @@ class ModelMapper:
     def _user_dto_to_user(user_data: dict):
         birthday = None if user_data.get("birthday") is None else datetime.strptime(user_data.get("birthday").split('T')[0], "%Y-%m-%d")
         gender = -1 if user_data.get("gender") is None else int(user_data.get("gender"))
+        edu_info = '' if user_data.get('educationInfo') is None else user_data.get('educationInfo')
         return User(
             first_name=user_data.get("firstName"),
             last_name=user_data.get("lastName"),
             gender=gender,
             registration_date=datetime.strptime(user_data.get("registrationDate").split('T')[0], "%Y-%m-%d"),
             birthday=birthday,
-            education_info=user_data.get('educationInfo')
+            education_info=edu_info
         )
 
     # маппинг модели комментария в сущность

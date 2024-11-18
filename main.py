@@ -12,9 +12,6 @@ from BusinessLogic.Services.DataDownloader import DataDownloader
 # главный класс приложения
 class MainApp(QObject):
     def __init__(self):
-        # инициализация контекста БД
-        db_context = AppContext()
-        db_context.init_engine()
         self.data_downloader_service = DataDownloader()
 
     def start_data_download(self):
