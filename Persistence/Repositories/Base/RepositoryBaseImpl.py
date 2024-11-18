@@ -11,14 +11,13 @@ from Persistence.DatabaseConfig.DatabaseContext import AppContext
 
 T = TypeVar("T", bound=EntityBase)
 
-# имплементация базового репозитория проекта
+# Реализация базового репозитория проекта
 class RepositoryBaseImpl(RepositoryBase, Generic[T]):
     context: DatabaseContext.AppContext
     def __init__(self):
         # инициализация контекста БД
         self.context = AppContext()
 
-    #метод инициализации контекста БД
     async def init_context_engine(self) -> bool:
         try:
             if self.context.is_initialized is False:
@@ -27,7 +26,6 @@ class RepositoryBaseImpl(RepositoryBase, Generic[T]):
         except (SQLAlchemyError, BaseException) as e:
             print(f'Ошибка инициализации контекста БД: {e}')
             return False
-
 
 
     async def add_async(self, entity: T) -> T:

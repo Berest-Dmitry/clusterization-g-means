@@ -1,4 +1,6 @@
 import uuid
+from sqlalchemy import func
+from sqlalchemy.future import select
 from sqlalchemy.exc import SQLAlchemyError
 from Domain.Entities.User import User
 from Persistence.Repositories.Base.RepositoryBaseImpl import RepositoryBaseImpl
@@ -60,3 +62,18 @@ class UsersRepository(RepositoryMixin):
             return  await self.repository.bulk_insert_async(users)
         except SQLAlchemyError as e:
             raise
+
+    # метод подсчета кол-ва строк в таблице
+    async def count_rows(self):
+        try:
+            init_result = await self.repository.init_context_engine()
+            total: int
+            async with self.repository.context.get_async_session().begin() as session:
+                result = await session.execute(
+                    select(func.count()).select_from(User)
+                )
+                total = result.scalar()
+                await  session.close()
+            return total
+        except SQLAlchemyError as e:
+            raise e

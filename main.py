@@ -4,7 +4,6 @@ from PyQt5.QtCore import QObject
 from PyQt5.QtGui import QGuiApplication
 from PyQt5.QtQml import QQmlApplicationEngine
 from BusinessLogic.ThreadConfig.DataDownloaderThread import DataDownloaderThread
-from Persistence.DatabaseConfig.DatabaseContext import AppContext
 SCRIPT_DIR =  os.path.dirname(os.getcwd()) + "\\Services"
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 from BusinessLogic.Services.DataDownloader import DataDownloader

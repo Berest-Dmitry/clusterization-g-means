@@ -34,3 +34,8 @@ class RepositoryBase(ABC, Generic[T]):
     @abstractmethod
     async def bulk_insert_async(self, entities: list[T]):
         """ Метод множественной вставки записей в таблицу"""
+
+    @abstractmethod
+    async def init_context_engine(self) -> bool:
+        """метод инициализации контекста БД"""
+

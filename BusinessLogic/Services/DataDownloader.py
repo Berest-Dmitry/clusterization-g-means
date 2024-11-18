@@ -33,6 +33,11 @@ class DataDownloader:
 
     # метод загрузки данных из стороннего приложения
     async def extract_data(self):
+        # проверяем, были ли ранее загружены данные об активности пользователей из стороннего сервиса
+        data_exists_in_db = await self.check_if_data_downloaded()
+        if data_exists_in_db:
+            return
+
         #отправляем в сторонний сервис запрос на получение данных и ожидаем данные
         self._dataExtractor.basic_publish()
         self._dataExtractor.basic_consume()
@@ -84,4 +89,11 @@ class DataDownloader:
         await self._usersRepository.bulk_insert_users(users_list)
         await self._postsRepository.bulk_insert_posts(posts_list)
         await self._commentsRepository.bulk_insert_comments(comments_list)
+
+    # метод проверки наличия данных
+    async def check_if_data_downloaded(self) -> bool:
+        users_count = await self._usersRepository.count_rows()
+        posts_count = await self._postsRepository.count_rows()
+        comments_count = await self._commentsRepository.count_rows()
+        return users_count > 0 and (posts_count > 0 or comments_count > 0)
 
