@@ -1,15 +1,31 @@
 import os
 import sys
+from PyQt5.QtCore import QObject
 from PyQt5.QtGui import QGuiApplication
 from PyQt5.QtQml import QQmlApplicationEngine
-import pydantic
-import pydantic_xml
-
+from BusinessLogic.ThreadConfig.DataDownloaderThread import DataDownloaderThread
 SCRIPT_DIR =  os.path.dirname(os.getcwd()) + "\\Services"
 sys.path.append(os.path.dirname(SCRIPT_DIR))
-from Services.data_extractor_service import DataExtractor
+from BusinessLogic.Services.DataDownloader import DataDownloader
 
-users_list: list
+# главный класс приложения
+class MainApp(QObject):
+    def __init__(self):
+        self.data_downloader_service = DataDownloader()
+
+    def start_data_download(self):
+        try:
+            self.thread = DataDownloaderThread(self.data_downloader_service)
+            self.thread.finished.connect(self.on_data_download_finished)
+            self.thread.start()
+        except BaseException as e:
+            print(str(e))
+
+
+    def on_data_download_finished(self, message):
+        print(message)
+
+
 
 app = QGuiApplication(sys.argv)
 
@@ -17,11 +33,8 @@ engine = QQmlApplicationEngine()
 engine.quit.connect(app.quit)
 engine.load('./UI/main.qml')
 
-data_extractor = DataExtractor()
-try:
-    data_extractor.BasicPuplish()
-    data_extractor.BasicConsume()
-except Exception as ex:
-    print(ex)
+#запуск приложения
+main_app = MainApp()
+main_app.start_data_download()
 
 sys.exit(app.exec())
