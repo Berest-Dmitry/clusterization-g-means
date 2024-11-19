@@ -1,6 +1,6 @@
 import copy
 import uuid
-from typing import TypeVar
+from typing import TypeVar, Type
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.future import select
 from typing_extensions import Generic
@@ -75,7 +75,7 @@ class RepositoryBaseImpl(RepositoryBase, Generic[T]):
     async def get_by_id_async(self, _id: uuid) -> T:
         init_result = await self.init_context_engine()
         result: T
-        async with self.context.get_async_session() as session:
+        async with self.context.get_async_session().begin() as session:
             q_entity = (select(T)
                         .where(T.id == _id)
                         )
@@ -83,11 +83,11 @@ class RepositoryBaseImpl(RepositoryBase, Generic[T]):
             await session.close()
         return result
 
-    async def get_all_async(self) -> list[T]:
+    async def get_all_async(self, entity_class: Type[T]) -> list[T]:
         init_result = await self.init_context_engine()
         entities: list[T]
-        async with self.context.get_async_session() as session:
-            q = select(T)
+        async with self.context.get_async_session().begin() as session:
+            q = select(entity_class)
             result = await session.execute(q)
             entities = result.scalars().all()
             await  session.close()

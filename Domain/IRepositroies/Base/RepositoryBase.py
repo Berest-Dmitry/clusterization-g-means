@@ -1,6 +1,6 @@
 import uuid
 from abc import ABC, abstractmethod
-from typing import TypeVar, Generic
+from typing import TypeVar, Generic, Type
 from Domain.Entities.Base.EntityBase import EntityBase
 from Persistence.DatabaseConfig import DatabaseContext
 
@@ -12,7 +12,7 @@ class RepositoryBase(ABC, Generic[T]):
     context: DatabaseContext.AppContext
 
     @abstractmethod
-    async def get_all_async(self) -> list[T]:
+    async def get_all_async(self, entity_class: Type[T]) -> list[T]:
         """ Метод для получения всех записей таблицы """
 
     @abstractmethod

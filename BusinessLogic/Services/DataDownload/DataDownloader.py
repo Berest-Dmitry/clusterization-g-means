@@ -1,7 +1,7 @@
 from typing import List
 from pydantic import ValidationError
 from BusinessLogic.Services.Common.ModelMapper import ModelMapper
-from BusinessLogic.Services.data_extractor_service import DataExtractor
+from BusinessLogic.Services.DataDownload.data_extractor_service import DataExtractor
 from BusinessLogic.TransportModels.full_user_data_for_clustering import FullUserDataForClustering
 from Domain.Entities.Comment import Comment
 from Domain.Entities.Post import Post
@@ -34,7 +34,7 @@ class DataDownloader:
     # метод загрузки данных из стороннего приложения
     async def extract_data(self):
         # проверяем, были ли ранее загружены данные об активности пользователей из стороннего сервиса
-        data_exists_in_db = await self.check_if_data_downloaded()
+        data_exists_in_db = await  self.check_if_data_downloaded()
         if data_exists_in_db:
             return
 
