@@ -55,13 +55,13 @@ class ClusterizationService:
         return labels
 
     # метод выполнения кластеризации
-    def conduct_clusterization(self, analysis_type: str, data: list):
+    def conduct_clusterization(self, analysis_type: str, data: list, initial_k: int):
         try:
             base_param, target_param, title = self._clusterization_params[analysis_type]
             self.current_dataframe = pd.DataFrame(data, columns= [base_param, target_param])
             result_dataframe = copy(self.current_dataframe)
             matrix = result_dataframe.values
-            labels = self._gmeans_base(matrix)
+            labels = self._gmeans_base(matrix, initial_k=initial_k)
             result_dataframe['Cluster'] = labels
             return AnalysisResult(result_dataframe, base_param, target_param, title)
 

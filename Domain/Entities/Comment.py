@@ -10,7 +10,7 @@ class Comment(EntityBase):
     content: Mapped[str] = mapped_column(String(500), nullable=False)
     user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=False, default=uuid.uuid4)
     post_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=False, default=uuid.uuid4)
-    parent_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=False, default=uuid.uuid4)
+    parent_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=False, default=uuid.uuid4, nullable=True)
 
     def __init__(self, content: str, user_id: uuid, post_id: uuid, parent_id: uuid):
         super().__init__()
