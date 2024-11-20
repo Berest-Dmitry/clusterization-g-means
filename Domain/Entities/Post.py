@@ -16,7 +16,7 @@ class Post(EntityBase):
     user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=False, default=uuid.uuid4)
 
     def __init__(self, title: str, content: str, publisher_name: str,
-                 link_url: str, link_name: str, geo_tag: str):
+                 link_url: str, link_name: str, geo_tag: str, user_id: uuid.UUID):
         super().__init__()
         self.title = title
         self.content = content
@@ -24,3 +24,4 @@ class Post(EntityBase):
         self.link_url = link_url
         self.link_name = link_name
         self.geo_tag = geo_tag
+        self.user_id = user_id

@@ -3,6 +3,8 @@ import sys
 from PyQt5.QtCore import QObject, QThread
 from PyQt5.QtGui import QGuiApplication
 from PyQt5.QtQml import QQmlApplicationEngine
+from PyQt5.QtWidgets import QApplication
+import matplotlib.pyplot as plt
 from BusinessLogic.Services.MainService import MainService
 from BusinessLogic.ThreadConfig.DataDownloaderThread import DataDownloaderThread
 from BusinessLogic.ThreadConfig.MainServiceThread import MainServiceThread
@@ -40,11 +42,22 @@ class MainApp(QObject):
         print(message)
         self.start_clusterization()
 
-    def on_clusterization_finished(self, message):
+    def on_clusterization_finished(self, message, result):
         print(message)
+        plt.figure(figsize=(10, 6))
+        columns_list = result.df.columns.tolist()
+        feature1 = columns_list[0]
+        feature2 = columns_list[1]
+        labels = columns_list[2]
+        plt.scatter(result.df[feature1], result.df[feature2], c=result.df[labels], cmap='viridis', alpha=0.6)
+        plt.title(result.plot_title)
+        plt.xlabel(feature1)
+        plt.ylabel(feature2)
+        plt.colorbar(label='Cluster Label')
+        plt.show()
 
 
-app = QGuiApplication(sys.argv)
+app = QApplication(sys.argv)
 
 engine = QQmlApplicationEngine()
 engine.quit.connect(app.quit)

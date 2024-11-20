@@ -4,7 +4,7 @@ import pandas as pd
 from pandas import DataFrame
 from sklearn.cluster import KMeans
 from scipy.stats import normaltest
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 from BusinessLogic.Models.AnalysisResult import AnalysisResult
 
@@ -13,9 +13,9 @@ from BusinessLogic.Models.AnalysisResult import AnalysisResult
 class ClusterizationService:
     # исходные данные и условия анализа
     _clusterization_params = {
-        'gender_to_age': ('gender', 'age'),
-        'num_of_posts': ('age', 'posts_count'),
-        'num_of_comments': ('age', 'comments_count'),
+        'gender_to_age': ('gender', 'age', 'Распределение пользователей по полу и возрасту'),
+        'num_of_posts': ('age', 'posts_count', 'Распределение по количеству постов в соцсети'),
+        'num_of_comments': ('age', 'comments_count', 'Распределение по количеству комментариев в соцсети'),
     }
     # результаты анализа
     current_dataframe: DataFrame
@@ -40,7 +40,7 @@ class ClusterizationService:
             new_labels = []
             for i in range(k):
                 cluster_data = X[labels == i]
-                if len(cluster_data) > 0 and ClusterizationService._is_normal(cluster_data[:, 0]):
+                if len(cluster_data) > 0 and ClusterizationService._is_normal(cluster_data[:, 1]):
                     new_labels.extend([i] * len(cluster_data))
                 else:
                     # Разделяем кластер на два
@@ -57,13 +57,13 @@ class ClusterizationService:
     # метод выполнения кластеризации
     def conduct_clusterization(self, analysis_type: str, data: list):
         try:
-            base_param, target_param = self._clusterization_params[analysis_type]
+            base_param, target_param, title = self._clusterization_params[analysis_type]
             self.current_dataframe = pd.DataFrame(data, columns= [base_param, target_param])
             result_dataframe = copy(self.current_dataframe)
             matrix = result_dataframe.values
             labels = self._gmeans_base(matrix)
             result_dataframe['Cluster'] = labels
-            return AnalysisResult(result_dataframe, base_param, target_param)
+            return AnalysisResult(result_dataframe, base_param, target_param, title)
 
         except (AttributeError, BaseException) as e:
             print(str(e))

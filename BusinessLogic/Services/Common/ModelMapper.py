@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 from Domain.Entities.Base.EntityBase import EntityBase
 from Domain.Entities.Comment import Comment
@@ -23,13 +24,15 @@ class ModelMapper:
         birthday = None if user_data.get("birthday") is None else datetime.strptime(user_data.get("birthday").split('T')[0], "%Y-%m-%d")
         gender = -1 if user_data.get("gender") is None else int(user_data.get("gender"))
         edu_info = '' if user_data.get('educationInfo') is None else user_data.get('educationInfo')
+        outer_service_id = user_data.get('outerServiceId')
         return User(
             first_name=user_data.get("firstName"),
             last_name=user_data.get("lastName"),
             gender=gender,
             registration_date=datetime.strptime(user_data.get("registrationDate").split('T')[0], "%Y-%m-%d"),
             birthday=birthday,
-            education_info=edu_info
+            education_info=edu_info,
+            outer_service_id= uuid.UUID(hex=outer_service_id)
         )
 
     # маппинг модели комментария в сущность
@@ -47,11 +50,13 @@ class ModelMapper:
     # маппинг модели поста в сущность
     @staticmethod
     def _post_dto_to_post(post_data: dict):
+        user_id = post_data.get("userId")
         return  Post(
             title=post_data.get("title"),
             content=post_data.get("content"),
             publisher_name=post_data.get("publisherName"),
             link_url=post_data.get("linkUrl"),
             link_name=post_data.get("linkName"),
-            geo_tag=post_data.get("geoTag")
+            geo_tag=post_data.get("geoTag"),
+            user_id=uuid.UUID(hex=user_id)
         )

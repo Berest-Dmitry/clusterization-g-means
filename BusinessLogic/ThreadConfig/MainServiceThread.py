@@ -1,10 +1,11 @@
 from PyQt5.QtCore import pyqtSignal, QThread
 import asyncio
+from BusinessLogic.Models.AnalysisResult import AnalysisResult
 from BusinessLogic.Services.MainService import MainService
 from qasync import QEventLoop, asyncSlot
 
 class MainServiceThread(QThread):
-    finished = pyqtSignal(str)
+    finished = pyqtSignal(str, AnalysisResult)
     loop: QEventLoop
 
     def __init__(self, main_service: MainService):
@@ -19,7 +20,7 @@ class MainServiceThread(QThread):
 
     async def run_async(self):
         try:
-            await self.main_service.run_clusterization()
-            self.finished.emit("Выполнена кластеризация.")
+            result = await self.main_service.run_clusterization()
+            self.finished.emit("Выполнена кластеризация.", result)
         except Exception as ex:
             self.finished.emit(f"Произошла ошибка во время кластеризации: {ex}")
