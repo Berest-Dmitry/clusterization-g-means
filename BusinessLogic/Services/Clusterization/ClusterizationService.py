@@ -16,6 +16,8 @@ class ClusterizationService:
         'gender_to_age': ('gender', 'age', 'Распределение пользователей по полу и возрасту'),
         'num_of_posts': ('age', 'posts_count', 'Распределение по количеству постов в соцсети'),
         'num_of_comments': ('age', 'comments_count', 'Распределение по количеству комментариев в соцсети'),
+        'comments_under_posts': ('age', 'comments_count', 'Количество комментариев под постами пользователя'),
+        'replies_to_comments': ('age', 'replies_count', 'Количество ответов на комментарии'),
     }
     # результаты анализа
     current_dataframe: DataFrame

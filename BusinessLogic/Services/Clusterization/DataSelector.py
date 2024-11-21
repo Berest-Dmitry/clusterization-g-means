@@ -1,4 +1,7 @@
 import datetime, pytz
+from math import floor
+
+from sqlalchemy.exc import SQLAlchemyError
 from Domain.Entities.Comment import Comment
 from Domain.Entities.Post import Post
 from Domain.Entities.User import User
@@ -69,3 +72,37 @@ class DataSelector:
             age = relativedelta(date_now, date_birth)
             result.append([age.years, comments_count])
         return result
+
+    # метод получения кол-ва комментариев под постами для каждого пользователя
+    async def comments_count_under_user_posts(self):
+        try:
+            intermediate_data = await self._usersRepository.count_comments_under_posts_for_users()
+            result = []
+            for item in intermediate_data:
+                user_birthday = next(user.birthday for user in self.users_list if user.id == item[0])
+                user_birthday = user_birthday.replace(tzinfo=utc)
+                date_now = datetime.datetime.now().replace(tzinfo=utc)
+                user_age = relativedelta(date_now, user_birthday)
+                result.append([user_age.years, item[1]])
+            return result
+        except (BaseException, SQLAlchemyError) as e:
+            print(f"Ошибка при обработке данных о комментариях под постами: {str(e)}")
+            raise e
+
+    # метод получения кол-ва ответов на комментарии для каждого пользователя
+    async def comments_under_user_comments(self):
+        try:
+            intermediate_data = await self._usersRepository.count_comments_under_comments_for_users()
+            result = []
+            for item in intermediate_data:
+                user_birthday = next(user.birthday for user in self.users_list if user.outer_service_id == item[0])
+                user_birthday = user_birthday.replace(tzinfo=utc)
+                date_now = datetime.datetime.now().replace(tzinfo=utc)
+                user_age = relativedelta(date_now, user_birthday)
+                count = floor(float(item[1]))
+                result.append([user_age.years, count])
+            return result
+        except (BaseException, SQLAlchemyError) as e:
+            print(f"Ошибка при обработке данных о комментариях под комментариями: {str(e)}")
+            raise e
+

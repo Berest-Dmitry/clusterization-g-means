@@ -26,5 +26,11 @@ class MainService:
         elif a_type == 'num_of_posts':
             age_to_posts = self._selector.users_age_to_number_of_posts()
             result = self._clusterizationBlogic.conduct_clusterization(a_type, age_to_posts, int(initial_num_clusters))
+        elif a_type == 'comments_under_posts':
+            age_to_comments_count_by_posts = await self._selector.comments_count_under_user_posts()
+            result = self._clusterizationBlogic.conduct_clusterization(a_type, age_to_comments_count_by_posts, int(initial_num_clusters))
+        elif a_type == 'replies_to_comments':
+            age_to_comment_replies = await  self._selector.comments_under_user_comments()
+            result = self._clusterizationBlogic.conduct_clusterization(a_type, age_to_comment_replies, int(initial_num_clusters))
         return  result
 
