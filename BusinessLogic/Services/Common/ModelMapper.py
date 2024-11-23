@@ -1,9 +1,11 @@
-import uuid
+import uuid, pytz
 from datetime import datetime
 from Domain.Entities.Base.EntityBase import EntityBase
 from Domain.Entities.Comment import Comment
 from Domain.Entities.Post import Post
 from Domain.Entities.User import User
+
+utc = pytz.UTC
 
 
 # сервис маппинга сущностей и моделей
@@ -21,7 +23,7 @@ class ModelMapper:
     # маппинг модели пользователя в сущность
     @staticmethod
     def _user_dto_to_user(user_data: dict):
-        birthday = None if user_data.get("birthday") is None else datetime.strptime(user_data.get("birthday").split('T')[0], "%Y-%m-%d")
+        birthday = None if user_data.get("birthday") is None else datetime.strptime(user_data.get("birthday").split('T')[0], "%Y-%m-%d").replace(tzinfo=utc)
         gender = -1 if user_data.get("gender") is None else int(user_data.get("gender"))
         edu_info = '' if user_data.get('educationInfo') is None else user_data.get('educationInfo')
         outer_service_id = user_data.get('outerServiceId')

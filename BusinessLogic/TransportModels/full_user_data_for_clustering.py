@@ -1,3 +1,4 @@
+import datetime
 import uuid
 from typing import List, Optional
 from pydantic_xml import BaseXmlModel, element, attr
@@ -8,7 +9,7 @@ from BusinessLogic.TransportModels.post_clustering_model import PostClusteringMo
 class FullUserDataForClustering(BaseXmlModel):
     first_name: Optional[str] = attr()
     last_name:  Optional[str] = attr()
-    birthday:  Optional[str] = attr()
+    birthday:  Optional[datetime.datetime] = attr(default=None)
     gender: Optional[str] = attr()
     education_info:  Optional[str] = attr()
     registration_date: Optional[str] = attr()
