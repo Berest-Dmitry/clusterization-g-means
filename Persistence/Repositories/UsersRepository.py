@@ -89,7 +89,7 @@ class UsersRepository(RepositoryMixin):
                 result = await session.execute(
                     select(User.id, func.count(Comment.id))
                     .join(Post, Post.user_id == User.outer_service_id)
-                    .join(Comment, Comment.post_id == Post.id)
+                    .join(Comment, Comment.post_id == Post.outer_service_id)
                     .group_by(User.id)
                 )
 

@@ -11,4 +11,5 @@ class PostClusteringModel(BaseXmlModel):
     link_name: Optional[str] = attr()
     geo_tag: Optional[str] = attr()
     user_id: Optional[uuid.UUID] = attr(default_factory=uuid.uuid4)
+    outer_service_id: Optional[uuid.UUID] = attr(default_factory=uuid.uuid4)
 

@@ -53,6 +53,7 @@ class ModelMapper:
     @staticmethod
     def _post_dto_to_post(post_data: dict):
         user_id = post_data.get("userId")
+        outer_service_id = post_data.get("outerServiceId")
         return  Post(
             title=post_data.get("title"),
             content=post_data.get("content"),
@@ -60,5 +61,6 @@ class ModelMapper:
             link_url=post_data.get("linkUrl"),
             link_name=post_data.get("linkName"),
             geo_tag=post_data.get("geoTag"),
-            user_id=uuid.UUID(hex=user_id)
+            user_id=uuid.UUID(hex=user_id),
+            outer_service_id=uuid.UUID(hex=outer_service_id)
         )

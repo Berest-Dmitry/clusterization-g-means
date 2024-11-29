@@ -14,9 +14,11 @@ class Post(EntityBase):
     link_name: Mapped[str] = mapped_column(String, nullable=True)
     geo_tag: Mapped[str] = mapped_column(String, nullable=True)
     user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=False, default=uuid.uuid4)
+    outer_service_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=False, default=uuid.uuid4, nullable=True)
 
     def __init__(self, title: str, content: str, publisher_name: str,
-                 link_url: str, link_name: str, geo_tag: str, user_id: uuid.UUID):
+                 link_url: str, link_name: str, geo_tag: str, user_id: uuid.UUID,
+                 outer_service_id: uuid.UUID | None):
         super().__init__()
         self.title = title
         self.content = content
@@ -25,3 +27,4 @@ class Post(EntityBase):
         self.link_name = link_name
         self.geo_tag = geo_tag
         self.user_id = user_id
+        self.outer_service_id = outer_service_id
